@@ -85,7 +85,8 @@ const extractDefinitions = async (
     foundDefinitions = await page.evaluate(() => {
       const targetP = Array.from(document.querySelectorAll("*"))
         .filter((element) =>
-          element.innerText.toLowerCase() === "bedeutungen:"
+          (element.innrText !== undefined) &&
+          (element.innerText.toLowerCase() === "bedeutungen:")
         )[0];
       let nextSibling = targetP.nextElementSibling!;
       const texts = Array.from(nextSibling.querySelectorAll("dd")).map(
