@@ -1,4 +1,4 @@
-from ...core.metrics import MetricBase
+from fastNLP import MetricBase
 import numpy as np
 
 
@@ -6,7 +6,6 @@ class BiMetric(MetricBase):
     """
     两种语言的评测
     """
-
     def __init__(self):
         super().__init__()
         self.total = 0
@@ -25,27 +24,23 @@ class BiMetric(MetricBase):
         pred, indices = pred.sort(dim=-1, descending=True)
         _indices = indices[:, :1000].tolist()
         target_word1 = target.tolist()
-        for index, (pred_i, target_word) in enumerate(zip(_indices, target_word1)):
+        for index,(pred_i, target_word) in enumerate(zip(_indices, target_word1)):
             try:
-                self.ranks.append(1 / (pred_i.index(target_word) + 1))
+                self.ranks.append(1/(pred_i.index(target_word)+1))
             except:
                 try:
-                    self.ranks.append(
-                        1 / (indices[index][1000:].tolist().index(target_word) + 1000)
-                    )
+                    self.ranks.append(1/(indices[index][1000:].tolist().index(target_word)+1000))
                 except:
-                    self.ranks.append(1 / pred.size(1))
+                    self.ranks.append(1/pred.size(1))
             if target_word in pred_i[:10]:
                 self.top10 += 1
                 if target_word == pred_i[0]:
                     self.top1 += 1
 
     def get_metric(self, reset=True):
-        res = {
-            "t1": round(self.top1 / self.total, 3),
-            "t10": round(self.top10 / self.total, 3),
-            "rank": round(np.mean(self.ranks), 3),
-        }
+        res = {'t1':round(self.top1/self.total, 3), 't10':round(self.top10/self.total, 3),
+               'rank': round(np.mean(self.ranks), 3)
+               }
         self.last_metrics = res.copy()
         if reset:
             self.total = 0
@@ -78,7 +73,7 @@ class JointMetric(MetricBase):
         :param target: batch_size, LongTensor
         :return:
         """
-        pred = pred[:, self.start : self.end]
+        pred = pred[:, self.start:self.end]
         target = target - self.start
         self.total += pred.size(0)
         pred, indices = pred.sort(dim=-1, descending=True)
@@ -89,9 +84,7 @@ class JointMetric(MetricBase):
                 self.ranks.append(1 / (pred_i.index(target_word) + 1))
             except:
                 try:
-                    self.ranks.append(
-                        1 / (indices[index][1000:].tolist().index(target_word) + 1000)
-                    )
+                    self.ranks.append(1 / (indices[index][1000:].tolist().index(target_word) + 1000))
                 except:
                     self.ranks.append(1 / pred.size(1))
             if target_word in pred_i[:10]:
@@ -100,11 +93,9 @@ class JointMetric(MetricBase):
                     self.top1 += 1
 
     def get_metric(self, reset=True):
-        res = {
-            "t1": round(self.top1 / self.total, 3),
-            "t10": round(self.top10 / self.total, 3),
-            "rank": round(np.mean(self.ranks), 3),
-        }
+        res = {'t1': round(self.top1 / self.total, 3), 't10': round(self.top10 / self.total, 3),
+               'rank': round(np.mean(self.ranks), 3)
+               }
         self.last_metrics = res.copy()
         if reset:
             self.total = 0

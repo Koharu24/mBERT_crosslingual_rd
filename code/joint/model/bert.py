@@ -1,8 +1,11 @@
 from transformers import BertModel, BertForMaskedLM
+
+# from ....mono.model.bert import RDBertForMaskedLM
+from ...mono.model.bert import RDBertForMaskedLM
 from torch import nn
 import torch
 import numpy as np
-from ...mlp import MLP
+from fastNLP.modules import MLP
 import torch.nn.functional as F
 
 
@@ -14,6 +17,8 @@ class BiBertReverseDict(nn.Module):
     def __init__(self, pre_name, word2bpes, pad_id, number_word_in_train=None):
         super().__init__()
         self.model = BertModel.from_pretrained(pre_name)
+        # self.model = RDBertForMaskedLM.from_pretrained(pre_name)
+        # self.model.set_start_end(1, 1+len(word2bpes[0]))
         self.max_word_len = len(word2bpes[0])
         word2bpes = torch.LongTensor(word2bpes).transpose(0, 1).unsqueeze(0)
         self.register_buffer("word2bpes", word2bpes)
