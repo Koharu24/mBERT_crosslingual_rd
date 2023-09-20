@@ -1,13 +1,11 @@
 from fastNLP import Callback
 import fitlog
-from fastNLP import Tester
+from ...core.tester import Tester
 from fastNLP import DataSet
 from copy import deepcopy
 
 
 class FitlogCallback(Callback):
-   
-
     def __init__(
         self, data=None, tester=None, log_loss_every=0, verbose=0, log_exception=False
     ):
