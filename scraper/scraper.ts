@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import { unlink } from "node:fs/promises";
+import assert from "assert";
 
 function shuffleArray<T>(arr: T[]): T[] {
   let currentIndex = arr.length, randomIndex: number;
@@ -164,7 +165,15 @@ const createNewPage = async (browser: any, redirectConsole = true) => {
   return page;
 };
 
-const main = async (maxNumber: number, language: string) => {
+const main = async (
+  maxNumber: number,
+  language: string,
+  startFrom: number = 0,
+) => {
+  assert(startFrom >= 0);
+  if (startFrom > 0) {
+    console.log("WARNING: starfrom > 0.");
+  }
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome-unstable",
     headless: "new",
@@ -174,7 +183,7 @@ const main = async (maxNumber: number, language: string) => {
       "\n",
     ).filter((word: string) => word.length > 1).map((word: string) =>
       word.trim()
-    );
+    ).slice(startFrom);
   console.log(`Total words: ${cleanWords.length}`);
 
   const poolSize = 50;
@@ -191,7 +200,12 @@ const main = async (maxNumber: number, language: string) => {
   const path = `./data/${language}_definitions.jsonl`;
   const file = Bun.file(path);
   if (await file.exists()) {
-    await unlink(path);
+    if (startFrom === 0) {
+      console.log("WARNING: file already exists. Erasing it.");
+      await unlink(path);
+    } else {
+      console.log("WARNING: file already exists. Adding data to it.");
+    }
   }
   const writer = file.writer();
   for (const batch of wordBatches) {
@@ -223,4 +237,5 @@ const main = async (maxNumber: number, language: string) => {
 await main(
   10,
   "ja",
+  160000,
 );
