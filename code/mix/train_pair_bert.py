@@ -21,6 +21,16 @@ from ..joint.model.metrics import JointMetric, SummaryMetric
 from .model.loss import MixLoss
 from ..joint.model.callback import FitlogCallback
 from ..joint.data.utils import clip_max_length
+import sys
+
+# gets the first command line argument
+if len(sys.argv) > 1:
+    batch_size = int(sys.argv[1])
+else:
+    batch_size = 80
+
+print(f"batch_size: {batch_size}")
+
 
 # fitlog.debug()
 fitlog.set_log_dir("logs")
@@ -35,7 +45,6 @@ model_name = "bert"
 max_word_len = 5
 lr = 5e-5
 lg_lambda = 0.0
-batch_size = 80
 n_epochs = 20
 ########hyper
 pre_name = "bert-base-multilingual-cased"
