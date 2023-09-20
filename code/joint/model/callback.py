@@ -13,7 +13,9 @@ class FitlogCallback(Callback):
     fitlog中记录的关于这些数据集的结果就是来自第三个epoch的结果。
     """
 
-    def __init__(self, data=None, tester=None, log_loss_every=0, verbose=0, log_exception=False):
+    def __init__(
+        self, data=None, tester=None, log_loss_every=0, verbose=0, log_exception=False
+    ):
         """
 
         :param ~fastNLP.DataSet,Dict[~fastNLP.DataSet] data: 传入DataSet对象，会使用多个Trainer中的metric对数据进行验证。如果需要
@@ -33,20 +35,24 @@ class FitlogCallback(Callback):
             if isinstance(tester, dict):
                 for name, test in tester.items():
                     if not isinstance(test, Tester):
-                        raise TypeError(f"{name} in tester is not a valid fastNLP.Tester.")
-                    self.testers['tester-' + name] = test
+                        raise TypeError(
+                            f"{name} in tester is not a valid fastNLP.Tester."
+                        )
+                    self.testers["tester-" + name] = test
             if isinstance(tester, Tester):
-                self.testers['tester-test'] = tester
+                self.testers["tester-test"] = tester
             for tester in self.testers.values():
-                setattr(tester, 'verbose', 0)
+                setattr(tester, "verbose", 0)
 
         if isinstance(data, dict):
             for key, value in data.items():
-                assert isinstance(value, DataSet), f"Only DataSet object is allowed, not {type(value)}."
+                assert isinstance(
+                    value, DataSet
+                ), f"Only DataSet object is allowed, not {type(value)}."
             for key, value in data.items():
-                self.datasets['data-' + key] = value
+                self.datasets["data-" + key] = value
         elif isinstance(data, DataSet):
-            self.datasets['data-test'] = data
+            self.datasets["data-test"] = data
         elif data is not None:
             raise TypeError("data receives dict[DataSet] or DataSet object.")
 
@@ -56,16 +62,25 @@ class FitlogCallback(Callback):
         self._save_metrics = {}
 
     def on_train_begin(self):
-        if (len(self.datasets) > 0 or len(self.testers) > 0) and self.trainer.dev_data is None:
-            raise RuntimeError("Trainer has no dev data, you cannot pass extra data to do evaluation.")
+        if (
+            len(self.datasets) > 0 or len(self.testers) > 0
+        ) and self.trainer.dev_data is None:
+            raise RuntimeError(
+                "Trainer has no dev data, you cannot pass extra data to do evaluation."
+            )
 
         if len(self.datasets) > 0:
             for key, data in self.datasets.items():
-                tester = Tester(data=data, model=self.model,
-                                batch_size=self.trainer.kwargs.get('dev_batch_size', self.batch_size),
-                                metrics=self.trainer.metrics,
-                                verbose=0,
-                                use_tqdm=self.trainer.test_use_tqdm)
+                tester = Tester(
+                    data=data,
+                    model=self.model,
+                    batch_size=self.trainer.kwargs.get(
+                        "dev_batch_size", self.batch_size
+                    ),
+                    metrics=self.trainer.metrics,
+                    verbose=0,
+                    use_tqdm=self.trainer.test_use_tqdm,
+                )
                 self.testers[key] = tester
         fitlog.add_progress(total_steps=self.n_steps)
 
@@ -73,8 +88,12 @@ class FitlogCallback(Callback):
         if self._log_loss_every > 0:
             self._avg_loss += loss.item()
             if self.step % self._log_loss_every == 0:
-                fitlog.add_loss(self._avg_loss / self._log_loss_every * self.update_every, name='loss', step=self.step,
-                                epoch=self.epoch)
+                fitlog.add_loss(
+                    self._avg_loss / self._log_loss_every * self.update_every,
+                    name="loss",
+                    step=self.step,
+                    epoch=self.epoch,
+                )
                 self._avg_loss = 0
 
     def on_valid_begin(self):
@@ -85,17 +104,23 @@ class FitlogCallback(Callback):
                     if self.verbose != 0:
                         self.pbar.write("FitlogCallback evaluation on {}:".format(key))
                         self.pbar.write(tester._format_eval_results(eval_result))
-                    fitlog.add_metric(eval_result, name=key, step=self.step, epoch=self.epoch)
+                    fitlog.add_metric(
+                        eval_result, name=key, step=self.step, epoch=self.epoch
+                    )
                     self._save_metrics[key] = eval_result
                 except Exception as e:
-                    self.pbar.write("Exception happens when evaluate on DataSet named `{}`.".format(key))
+                    self.pbar.write(
+                        "Exception happens when evaluate on DataSet named `{}`.".format(
+                            key
+                        )
+                    )
                     raise e
 
     def on_valid_end(self, eval_result, metric_key, optimizer, better_result):
         if better_result:
             eval_result = deepcopy(eval_result)
-            eval_result['step'] = self.step
-            eval_result['epoch'] = self.epoch
+            eval_result["step"] = self.step
+            eval_result["epoch"] = self.epoch
             fitlog.add_best_metric(eval_result)
         fitlog.add_metric(eval_result, step=self.step, epoch=self.epoch)
         if better_result:
@@ -108,4 +133,4 @@ class FitlogCallback(Callback):
     def on_exception(self, exception):
         fitlog.finish(status=1)
         if self._log_exception:
-            fitlog.add_other(repr(exception), name='except_info')
+            fitlog.add_other(repr(exception), name="except_info")

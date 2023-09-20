@@ -83,7 +83,7 @@ class BiUnAlignLoader(Loader):
     def __init__(self, lg1_lg2, lower=True):
         # lg1是target_language
         super().__init__()
-        assert lg1_lg2 in ("en_es", "en_fr")
+        # assert lg1_lg2 in ("en_es", "en_fr")
         self.lg1_lg2 = lg1_lg2
         self.lower = lower
 

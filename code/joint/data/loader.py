@@ -62,37 +62,42 @@ class BiAlignLoader(Loader):
     用来运行监督版本的双语
 
     """
+
     def __init__(self, lg1_lg2, lower=True):
         # lg1是target_language
         super().__init__()
-        assert lg1_lg2 in ('en_es', 'en_fr', 'fr_en', 'es_en')
+        # assert lg1_lg2 in ('en_es', 'en_fr', 'fr_en', 'es_en')
         self.lg1_lg2 = lg1_lg2
         self.lower = lower
 
     def load(self, folder):
-        fns ={
-            'dev':'{}_dev.csv'.format(self.lg1_lg2),
-            'test':'{}_test500.csv'.format(self.lg1_lg2),
-            'train': '{}_train500_10.csv'.format(self.lg1_lg2)
+        fns = {
+            "dev": "{}_dev.csv".format(self.lg1_lg2),
+            "test": "{}_test500.csv".format(self.lg1_lg2),
+            "train": "{}_train500_10.csv".format(self.lg1_lg2),
         }
-        target_lg = self.lg1_lg2.split('_')[0]
+        target_lg = self.lg1_lg2.split("_")[0]
         data_bundle = DataBundle()
         for name, fn in fns.items():
             path = os.path.join(folder, fn)
             ds = DataSet()
-            with open(path, 'r', encoding='utf-8') as f:
+            with open(path, "r", encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if line:
-                        parts = line.split('\t')
+                        parts = line.split("\t")
                         if self.lower:
-                            ins = Instance(word=parts[1].lower(), definition=parts[-1].lower())
+                            ins = Instance(
+                                word=parts[1].lower(), definition=parts[-1].lower()
+                            )
                         else:
                             ins = Instance(word=parts[1], definition=parts[-1])
                         ds.append(ins)
             data_bundle.set_dataset(ds, name=name)
         target_words = {}
-        with open(os.path.join(folder, '{}.txt'.format(target_lg)), encoding='utf-8') as f:
+        with open(
+            os.path.join(folder, "{}.txt".format(target_lg)), encoding="utf-8"
+        ) as f:
             for line in f:
                 line = line.strip()
                 if line:
@@ -101,7 +106,7 @@ class BiAlignLoader(Loader):
                     target_words[line] = 1
         target_words = list(target_words.keys())
 
-        setattr(data_bundle, 'target_words', target_words)
+        setattr(data_bundle, "target_words", target_words)
         return data_bundle
 
 
@@ -112,29 +117,33 @@ class JointAlignLoader(Loader):
 
     def load(self, folder):
         data_bundle = DataBundle()
-        for lg1_lg2 in ['en_es', 'es_en', 'fr_en', 'en_fr']:
+        for lg1_lg2 in ["en_es", "es_en", "fr_en", "en_fr"]:
             fns = {
-                '{}_dev'.format(lg1_lg2): '{}_dev.csv'.format(lg1_lg2),
-                f'{lg1_lg2}_test': '{}_test500.csv'.format(lg1_lg2),
-                f'{lg1_lg2}_train': '{}_train500_10.csv'.format(lg1_lg2)
+                "{}_dev".format(lg1_lg2): "{}_dev.csv".format(lg1_lg2),
+                f"{lg1_lg2}_test": "{}_test500.csv".format(lg1_lg2),
+                f"{lg1_lg2}_train": "{}_train500_10.csv".format(lg1_lg2),
             }
-            target_lg = lg1_lg2.split('_')[0]
+            target_lg = lg1_lg2.split("_")[0]
             for name, fn in fns.items():
                 path = os.path.join(folder, fn)
                 ds = DataSet()
-                with open(path, encoding='utf-8') as f:
+                with open(path, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if line:
-                            parts = line.split('\t')
+                            parts = line.split("\t")
                             if self.lower:
-                                ins = Instance(word=parts[1].lower(), definition=parts[-1].lower())
+                                ins = Instance(
+                                    word=parts[1].lower(), definition=parts[-1].lower()
+                                )
                             else:
                                 ins = Instance(word=parts[1], definition=parts[-1])
                             ds.append(ins)
                 data_bundle.set_dataset(ds, name=name)
             target_words = {}
-            with open(os.path.join(folder, '{}.txt'.format(target_lg)), encoding='utf-8') as f:
+            with open(
+                os.path.join(folder, "{}.txt".format(target_lg)), encoding="utf-8"
+            ) as f:
                 for line in f:
                     line = line.strip()
                     if line:
@@ -143,5 +152,5 @@ class JointAlignLoader(Loader):
                         target_words[line] = 1
             target_words = list(target_words.keys())
 
-            setattr(data_bundle, f'{target_lg}_target_words', target_words)
+            setattr(data_bundle, f"{target_lg}_target_words", target_words)
         return data_bundle
