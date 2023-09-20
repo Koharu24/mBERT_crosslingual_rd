@@ -53,8 +53,9 @@ paper里面一共有如下的setting
 
 import os
 import json
-from fastNLP.io import Loader, DataBundle
-from fastNLP import Instance, DataSet
+from ...io import Loader, DataBundle
+from fastNLP import Instance
+from ...core.dataset import DataSet
 import ipdb
 
 
