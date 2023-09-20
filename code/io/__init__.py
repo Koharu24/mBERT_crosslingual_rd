@@ -1,37 +1,30 @@
 __all__ = [
-    'DataBundle',
-    
-    'EmbedLoader',
-    
-    'Loader',
-    
-    'CLSBaseLoader',
-    'AGsNewsLoader',
-    'DBPediaLoader',
-    'YelpFullLoader',
-    'YelpPolarityLoader',
-    'IMDBLoader',
-    'SSTLoader',
-    'SST2Loader',
+    "DataBundle",
+    "EmbedLoader",
+    "Loader",
+    "CLSBaseLoader",
+    "AGsNewsLoader",
+    "DBPediaLoader",
+    "YelpFullLoader",
+    "YelpPolarityLoader",
+    "IMDBLoader",
+    "SSTLoader",
+    "SST2Loader",
     "ChnSentiCorpLoader",
     "THUCNewsLoader",
     "WeiboSenti100kLoader",
-
-    'ConllLoader',
-    'Conll2003Loader',
-    'Conll2003NERLoader',
-    'OntoNotesNERLoader',
-    'CTBLoader',
+    "ConllLoader",
+    "Conll2003Loader",
+    "Conll2003NERLoader",
+    "OntoNotesNERLoader",
+    "CTBLoader",
     "MsraNERLoader",
     "WeiboNERLoader",
     "PeopleDailyNERLoader",
-
-    'CSVLoader',
-    'JsonLoader',
-
-    'CWSLoader',
-
-    'MNLILoader',
+    "CSVLoader",
+    "JsonLoader",
+    "CWSLoader",
+    "MNLILoader",
     "QuoraLoader",
     "SNLILoader",
     "QNLILoader",
@@ -39,11 +32,8 @@ __all__ = [
     "CNXNLILoader",
     "BQCorpusLoader",
     "LCQMCLoader",
-
     "CMRC2018Loader",
-
     "Pipe",
-
     "CLSBasePipe",
     "AGsNewsPipe",
     "DBPediaPipe",
@@ -55,23 +45,19 @@ __all__ = [
     "ChnSentiCorpPipe",
     "THUCNewsPipe",
     "WeiboSenti100kPipe",
-
     "Conll2003Pipe",
     "Conll2003NERPipe",
     "OntoNotesNERPipe",
     "MsraNERPipe",
     "PeopleDailyPipe",
     "WeiboNERPipe",
-
     "CWSPipe",
-    
     "Conll2003NERPipe",
     "OntoNotesNERPipe",
     "MsraNERPipe",
     "WeiboNERPipe",
     "PeopleDailyPipe",
     "Conll2003Pipe",
-    
     "MatchingBertPipe",
     "RTEBertPipe",
     "SNLIBertPipe",
@@ -93,12 +79,9 @@ __all__ = [
     "RenamePipe",
     "GranularizePipe",
     "MachingTruncatePipe",
-
     "CMRC2018BertPipe",
-
-    'ModelLoader',
-    'ModelSaver',
-
+    "ModelLoader",
+    "ModelSaver",
 ]
 
 import sys
@@ -108,4 +91,3 @@ from .embed_loader import EmbedLoader
 from .loader import *
 from .model_io import ModelLoader, ModelSaver
 from .pipe import *
-

@@ -3,7 +3,7 @@ r"""
     doc
 """
 __all__ = [
-    'DataBundle',
+    "DataBundle",
 ]
 
 from typing import Union, List
@@ -19,7 +19,7 @@ class DataBundle:
     Loader的load函数生成，可以通过以下的方法获取里面的内容
 
     Example::
-        
+
         data_bundle = YelpLoader().load({'train':'/path/to/train', 'dev': '/path/to/dev'})
         train_vocabs = data_bundle.vocabs['train']
         train_data = data_bundle.datasets['train']
@@ -29,7 +29,7 @@ class DataBundle:
 
     def __init__(self, vocabs: dict = None, datasets: dict = None):
         r"""
-        
+
         :param vocabs: 从名称(字符串)到 :class:`~fastNLP.Vocabulary` 类型的dict
         :param datasets: 从名称(字符串)到 :class:`~fastNLP.DataSet` 类型的dict。建议不要将相同的DataSet对象重复传入，可能会在
             使用Pipe处理数据的时候遇到问题，若多个数据集确需一致，请手动deepcopy后传入。
@@ -56,7 +56,7 @@ class DataBundle:
         :param str name: dataset的名称
         :return: self
         """
-        assert isinstance(dataset, DataSet), "Only fastNLP.DataSet supports."
+        # assert isinstance(dataset, DataSet), import ipdb; ipdb.set_trace()
         self.datasets[name] = dataset
         return self
 
@@ -70,8 +70,10 @@ class DataBundle:
         if name in self.datasets.keys():
             return self.datasets[name]
         else:
-            error_msg = f'DataBundle do NOT have DataSet named {name}. ' \
-                        f'It should be one of {self.datasets.keys()}.'
+            error_msg = (
+                f"DataBundle do NOT have DataSet named {name}. "
+                f"It should be one of {self.datasets.keys()}."
+            )
             logger.error(error_msg)
             raise KeyError(error_msg)
 
@@ -95,8 +97,10 @@ class DataBundle:
         if field_name in self.vocabs.keys():
             return self.vocabs[field_name]
         else:
-            error_msg = f'DataBundle do NOT have Vocabulary named {field_name}. ' \
-                        f'It should be one of {self.vocabs.keys()}.'
+            error_msg = (
+                f"DataBundle do NOT have Vocabulary named {field_name}. "
+                f"It should be one of {self.vocabs.keys()}."
+            )
             logger.error(error_msg)
             raise KeyError(error_msg)
 
@@ -117,7 +121,13 @@ class DataBundle:
     def num_vocab(self):
         return len(self.vocabs)
 
-    def set_input(self, *field_names, flag=True, use_1st_ins_infer_dim_type=True, ignore_miss_dataset=True):
+    def set_input(
+        self,
+        *field_names,
+        flag=True,
+        use_1st_ins_infer_dim_type=True,
+        ignore_miss_dataset=True,
+    ):
         r"""
         将field_names中的field设置为input, 对data_bundle中所有的dataset执行该操作::
 
@@ -135,14 +145,26 @@ class DataBundle:
         for field_name in field_names:
             for name, dataset in self.datasets.items():
                 if not ignore_miss_dataset and not dataset.has_field(field_name):
-                    raise KeyError(f"Field:{field_name} was not found in DataSet:{name}")
+                    raise KeyError(
+                        f"Field:{field_name} was not found in DataSet:{name}"
+                    )
                 if not dataset.has_field(field_name):
                     continue
                 else:
-                    dataset.set_input(field_name, flag=flag, use_1st_ins_infer_dim_type=use_1st_ins_infer_dim_type)
+                    dataset.set_input(
+                        field_name,
+                        flag=flag,
+                        use_1st_ins_infer_dim_type=use_1st_ins_infer_dim_type,
+                    )
         return self
 
-    def set_target(self, *field_names, flag=True, use_1st_ins_infer_dim_type=True, ignore_miss_dataset=True):
+    def set_target(
+        self,
+        *field_names,
+        flag=True,
+        use_1st_ins_infer_dim_type=True,
+        ignore_miss_dataset=True,
+    ):
         r"""
         将field_names中的field设置为target, 对data_bundle中所有的dataset执行该操作::
 
@@ -160,11 +182,17 @@ class DataBundle:
         for field_name in field_names:
             for name, dataset in self.datasets.items():
                 if not ignore_miss_dataset and not dataset.has_field(field_name):
-                    raise KeyError(f"Field:{field_name} was not found in DataSet:{name}")
+                    raise KeyError(
+                        f"Field:{field_name} was not found in DataSet:{name}"
+                    )
                 if not dataset.has_field(field_name):
                     continue
                 else:
-                    dataset.set_target(field_name, flag=flag, use_1st_ins_infer_dim_type=use_1st_ins_infer_dim_type)
+                    dataset.set_target(
+                        field_name,
+                        flag=flag,
+                        use_1st_ins_infer_dim_type=use_1st_ins_infer_dim_type,
+                    )
         return self
 
     def set_pad_val(self, field_name, pad_val, ignore_miss_dataset=True):
@@ -219,7 +247,9 @@ class DataBundle:
                 raise KeyError(f"{field_name} not found DataSet:{name}.")
         return self
 
-    def rename_field(self, field_name, new_field_name, ignore_miss_dataset=True, rename_vocab=True):
+    def rename_field(
+        self, field_name, new_field_name, ignore_miss_dataset=True, rename_vocab=True
+    ):
         r"""
         将DataBundle中所有DataSet中名为field_name的field重命名为new_field_name.
 
@@ -232,7 +262,9 @@ class DataBundle:
         """
         for name, dataset in self.datasets.items():
             if dataset.has_field(field_name=field_name):
-                dataset.rename_field(field_name=field_name, new_field_name=new_field_name)
+                dataset.rename_field(
+                    field_name=field_name, new_field_name=new_field_name
+                )
             elif not ignore_miss_dataset:
                 raise KeyError(f"{field_name} not found DataSet:{name}.")
         if rename_vocab:
@@ -305,7 +337,14 @@ class DataBundle:
         for field_name, vocab in self.vocabs.items():
             yield field_name, vocab
 
-    def apply_field(self, func, field_name: str, new_field_name: str, ignore_miss_dataset=True, **kwargs):
+    def apply_field(
+        self,
+        func,
+        field_name: str,
+        new_field_name: str,
+        ignore_miss_dataset=True,
+        **kwargs,
+    ):
         r"""
         对 :class:`~fastNLP.io.DataBundle` 中所有的dataset使用 :meth:`~fastNLP.DataSet.apply_field` 方法
 
@@ -327,17 +366,24 @@ class DataBundle:
 
             5. tqdm_desc: str, 当use_tqdm为True时，可以显示当前tqdm正在处理的名称
         """
-        tqdm_desc = kwargs.get('tqdm_desc', '')
+        tqdm_desc = kwargs.get("tqdm_desc", "")
         for name, dataset in self.datasets.items():
-            if tqdm_desc != '':
-                kwargs['tqdm_desc'] = tqdm_desc + f' for `{name}`'
+            if tqdm_desc != "":
+                kwargs["tqdm_desc"] = tqdm_desc + f" for `{name}`"
             if dataset.has_field(field_name=field_name):
-                dataset.apply_field(func=func, field_name=field_name, new_field_name=new_field_name, **kwargs)
+                dataset.apply_field(
+                    func=func,
+                    field_name=field_name,
+                    new_field_name=new_field_name,
+                    **kwargs,
+                )
             elif not ignore_miss_dataset:
                 raise KeyError(f"{field_name} not found DataSet:{name}.")
         return self
 
-    def apply_field_more(self, func, field_name, modify_fields=True, ignore_miss_dataset=True, **kwargs):
+    def apply_field_more(
+        self, func, field_name, modify_fields=True, ignore_miss_dataset=True, **kwargs
+    ):
         r"""
         对 :class:`~fastNLP.io.DataBundle` 中所有的 dataset 使用 :meth:`~fastNLP.DataSet.apply_field_more` 方法
 
@@ -365,12 +411,17 @@ class DataBundle:
         :return Dict[str:Dict[str:Field]]: 返回一个字典套字典，第一层的 key 是 dataset 的名字，第二层的 key 是 field 的名字
         """
         res = {}
-        tqdm_desc = kwargs.get('tqdm_desc', '')
+        tqdm_desc = kwargs.get("tqdm_desc", "")
         for name, dataset in self.datasets.items():
-            if tqdm_desc != '':
-                kwargs['tqdm_desc'] = tqdm_desc + f' for `{name}`'
+            if tqdm_desc != "":
+                kwargs["tqdm_desc"] = tqdm_desc + f" for `{name}`"
             if dataset.has_field(field_name=field_name):
-                res[name] = dataset.apply_field_more(func=func, field_name=field_name, modify_fields=modify_fields, **kwargs)
+                res[name] = dataset.apply_field_more(
+                    func=func,
+                    field_name=field_name,
+                    modify_fields=modify_fields,
+                    **kwargs,
+                )
             elif not ignore_miss_dataset:
                 raise KeyError(f"{field_name} not found DataSet:{name} .")
         return res
@@ -397,10 +448,10 @@ class DataBundle:
             5. tqdm_desc: str, 当use_tqdm为True时，可以显示当前tqdm正在处理的名称
 
         """
-        tqdm_desc = kwargs.get('tqdm_desc', '')
+        tqdm_desc = kwargs.get("tqdm_desc", "")
         for name, dataset in self.datasets.items():
-            if tqdm_desc != '':
-                kwargs['tqdm_desc'] = tqdm_desc + f' for `{name}`'
+            if tqdm_desc != "":
+                kwargs["tqdm_desc"] = tqdm_desc + f" for `{name}`"
             dataset.apply(func, new_field_name=new_field_name, **kwargs)
         return self
 
@@ -429,10 +480,10 @@ class DataBundle:
         :return Dict[str:Dict[str:Field]]: 返回一个字典套字典，第一层的 key 是 dataset 的名字，第二层的 key 是 field 的名字
         """
         res = {}
-        tqdm_desc = kwargs.get('tqdm_desc', '')
+        tqdm_desc = kwargs.get("tqdm_desc", "")
         for name, dataset in self.datasets.items():
-            if tqdm_desc!='':
-                kwargs['tqdm_desc'] = tqdm_desc + f' for `{name}`'
+            if tqdm_desc != "":
+                kwargs["tqdm_desc"] = tqdm_desc + f" for `{name}`"
             res[name] = dataset.apply_more(func, modify_fields=modify_fields, **kwargs)
         return res
 
@@ -458,13 +509,13 @@ class DataBundle:
             dataset.delete_collate_fn(name=name)
 
     def __repr__(self):
-        _str = ''
+        _str = ""
         if len(self.datasets):
-            _str += 'In total {} datasets:\n'.format(self.num_dataset)
+            _str += "In total {} datasets:\n".format(self.num_dataset)
             for name, dataset in self.datasets.items():
-                _str += '\t{} has {} instances.\n'.format(name, len(dataset))
+                _str += "\t{} has {} instances.\n".format(name, len(dataset))
         if len(self.vocabs):
-            _str += 'In total {} vocabs:\n'.format(self.num_vocab)
+            _str += "In total {} vocabs:\n".format(self.num_vocab)
             for name, vocab in self.vocabs.items():
-                _str += '\t{} has {} entries.\n'.format(name, len(vocab))
+                _str += "\t{} has {} entries.\n".format(name, len(vocab))
         return _str
