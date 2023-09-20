@@ -7,6 +7,7 @@ if "p" in os.environ:
     os.environ["CUDA_VISIBLE_DEVICES"] = os.environ["p"]
 
 import torch
+import fitlog
 from torch import optim
 from fastNLP import Trainer  # CrossEntropyLoss
 
@@ -19,18 +20,18 @@ from .data.loader import BiUnAlignLoader
 
 # from V1.model.bert import ENBertReverseDict
 from .model.bert import JointBertReverseDict
-from fastNLP import DataSet
+from ..core.dataset import DataSet
 from ..core.tester import Tester
 from ..joint.model.metrics import JointMetric, SummaryMetric
 from .model.loss import MixLoss
 from ..joint.model.callback import FitlogCallback
 from ..joint.data.utils import clip_max_length
 
-# fitlog.debug()
-# fitlog.set_log_dir("logs")
-# fitlog.add_other("no lg embed and no lg loss", name="note")
-# fitlog.add_hyper_in_file(__file__)
-
+fitlog.debug()
+fitlog.set_log_dir("logs")
+fitlog.add_other("no lg embed and no lg loss", name="note")
+fitlog.add_hyper_in_file(__file__)
+#
 # paths = "./paper_data/mix"
 paths = "./new_data_like_paper/mix"
 
