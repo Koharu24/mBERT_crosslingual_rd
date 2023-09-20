@@ -118,7 +118,7 @@ class BiUnAlignLoader(Loader):
         bi1 = f"{lg1}_{lg2}"
         bi2 = f"{lg2}_{lg1}"
         for bi in [bi1, bi2]:
-            path = os.path.join(folder, "{}_test500.csv".format(bi))
+            path = os.path.join(folder, "{}_test.csv".format(bi))
             ds = read_dataset(path, self.lower, 1)
             # ds = DataSet()
             # with open(path, 'r', encoding='utf-8') as f:
@@ -144,7 +144,7 @@ class MixUnAlignLoader(Loader):
         fns = {
             "dev": "{}_dev.csv",
             # 'test':'{}_test500.csv'.format(self.lg1_lg2),
-            "train": "{}_train500_10.csv",
+            "train": "{}_train.csv",
         }
         data_bundle = DataBundle()
         words = {}
@@ -166,7 +166,7 @@ class MixUnAlignLoader(Loader):
         setattr(data_bundle, "target_words_dict", words)
 
         for bi in ["en_fr", "fr_en", "en_es", "es_en"]:
-            path = os.path.join(folder, "{}_test500.csv".format(bi))
+            path = os.path.join(folder, "{}_test.csv".format(bi))
             ds = read_dataset(path, self.lower, 1)
             data_bundle.set_dataset(ds, "{}_test".format(bi))
 
