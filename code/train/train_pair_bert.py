@@ -11,9 +11,9 @@ from torch import optim
 from fastNLP import Trainer  # CrossEntropyLoss
 
 # from transformers import Trainer
-from fastNLP import cache_results, WarmupCallback, GradientClipCallback
-
+from fastNLP import cache_results
 from ..core.sampler import BucketSampler
+from ..core.callback import WarmupCallback, GradientClipCallback
 from .data.pipe import MixUnalignBertPipe
 from .data.loader import BiUnAlignLoader
 
