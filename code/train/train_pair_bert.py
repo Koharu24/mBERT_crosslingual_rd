@@ -8,7 +8,7 @@ if "p" in os.environ:
 
 import torch
 from torch import optim
-from fastNLP import Trainer, CrossEntropyLoss
+from fastNLP import Trainer  # CrossEntropyLoss
 
 # from transformers import Trainer
 from fastNLP import BucketSampler, cache_results, WarmupCallback, GradientClipCallback
