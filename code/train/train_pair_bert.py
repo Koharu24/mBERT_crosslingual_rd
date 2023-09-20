@@ -19,7 +19,8 @@ from .data.loader import BiUnAlignLoader
 
 # from V1.model.bert import ENBertReverseDict
 from .model.bert import JointBertReverseDict
-from fastNLP import DataSet, Tester
+from fastNLP import DataSet
+from ..core.tester import Tester
 from ..joint.model.metrics import JointMetric, SummaryMetric
 from .model.loss import MixLoss
 from ..joint.model.callback import FitlogCallback
