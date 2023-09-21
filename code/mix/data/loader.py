@@ -114,20 +114,20 @@ class BiUnAlignLoader(Loader):
             words[lg] = target_words
         setattr(data_bundle, "target_words_dict", words)
 
-        # bi1 = f"{lg1}_{lg2}"
-        # bi2 = f"{lg2}_{lg1}"
-        # for bi in [bi1, bi2]:
-        #     path = os.path.join(folder, "{}_test.csv".format(bi))
-        #     ds = read_dataset(path, self.lower, 1)
-        #     # ds = DataSet()
-        #     # with open(path, 'r', encoding='utf-8') as f:
-        #     #     for line in f:
-        #     #         line = line.strip()
-        #     #         if line:
-        #     #             parts = line.split('\t')
-        #     #             ins = Instance(word=parts[1].lower(), definition=parts[-1])
-        #     #             ds.append(ins)
-        #     data_bundle.set_dataset(ds, "{}_test".format(bi))
+        bi1 = f"{lg1}_{lg2}"
+        bi2 = f"{lg2}_{lg1}"
+        for bi in [bi1, bi2]:
+            path = os.path.join(folder, "{}_test.csv".format(bi))
+            ds = read_dataset(path, self.lower, 1)
+            # ds = DataSet()
+            # with open(path, 'r', encoding='utf-8') as f:
+            #     for line in f:
+            #         line = line.strip()
+            #         if line:
+            #             parts = line.split('\t')
+            #             ins = Instance(word=parts[1].lower(), definition=parts[-1])
+            #             ds.append(ins)
+            data_bundle.set_dataset(ds, "{}_test".format(bi))
 
         return data_bundle
 

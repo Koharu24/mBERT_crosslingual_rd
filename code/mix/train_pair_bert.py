@@ -110,7 +110,7 @@ for name, ds in data_bundle.iter_datasets():
             _metric,
             batch_size=120,
             num_workers=1,
-            device=None,
+            device="cuda:0",
             verbose=1,
             use_tqdm=True,
         )
@@ -126,7 +126,7 @@ for name, ds in data_bundle.iter_datasets():
             _metric,
             batch_size=120,
             num_workers=1,
-            device=None,
+            device="cuda:0",
             verbose=1,
             use_tqdm=True,
         )
@@ -163,7 +163,7 @@ trainer = Trainer(
     validate_every=-1,
     save_path="save_models/",
     use_tqdm=True,
-    device=None,
+    device="cuda",
     callbacks=callbacks,
     check_code_level=-1,
 )
