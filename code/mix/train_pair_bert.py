@@ -43,10 +43,10 @@ paths = "./new_data_like_paper/mix"
 #######hyper
 pair = "en_it"
 model_name = "bert"
-max_word_len = 5
+max_word_len = 6
 lr = 5e-5
 lg_lambda = 0.0
-n_epochs = 0
+n_epochs = 20
 ########hyper
 pre_name = "bert-base-multilingual-cased"
 # transformers中bert-base-multilingual-cased
@@ -117,7 +117,7 @@ for name, ds in data_bundle.iter_datasets():
         )
         data[name] = tester
         # if name == "en_it_test":
-        #     ipdb.set_trace()
+        #      ipdb.set_trace()
         #     res = tester.test()
 
     elif "dev" in name:
