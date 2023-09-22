@@ -2,6 +2,7 @@ from fastNLP.io import Pipe
 from fastNLP import DataSet
 from transformers import BertTokenizer
 from collections import defaultdict
+import ipdb
 
 
 class MixUnalignBertPipe(Pipe):
@@ -51,6 +52,7 @@ class MixUnalignBertPipe(Pipe):
         pad_id = tokenizer.convert_tokens_to_ids(["[PAD]"])[0]
 
         target_words_dict = data_bundle.target_words_dict  # dict
+        # target_words_dict["it"].append("abbiocco")
         lgs = list(target_words_dict.keys())
 
         # 首先搞定词表问题
@@ -62,7 +64,7 @@ class MixUnalignBertPipe(Pipe):
         train_word2bpes = []
         train_word2idx = defaultdict(dict)  # word的index
         train_shifts = [0]
-
+        # ipdb.set_trace()
         for lg in lgs:
             lg_dict[lg] = len(lg_dict)
             target_words = target_words_dict[lg]
@@ -74,7 +76,6 @@ class MixUnalignBertPipe(Pipe):
                     train_word2idx[lg][word] = len(train_word2idx[lg])
                     train_word2bpes.append(bpes)
 
-            # 把train中加入进去
             target_shifts.append(len(target_word2bpes))
             names = [
                 name
@@ -91,7 +92,6 @@ class MixUnalignBertPipe(Pipe):
                         train_word2bpes.append(bpes)
             train_shifts.append(len(train_word2bpes))
 
-        # 然后将数据进行index
         for name in data_bundle.get_dataset_names():
             # (1) 需要tokenize word列
             # (2) 需要tokenize definition列
@@ -140,6 +140,8 @@ class MixUnalignBertPipe(Pipe):
                     new_ds.append(ins)
                 else:
                     if "train" not in name:
+                        if word == "abbiocco":
+                            ipdb.set_trace()
                         ins["target"] = -1
                         new_ds.append(ins)
             data_bundle.set_dataset(new_ds, name)

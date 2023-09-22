@@ -1,4 +1,5 @@
 import sys
+import ipdb
 
 sys.path.append("../")
 import os
@@ -45,16 +46,16 @@ model_name = "bert"
 max_word_len = 5
 lr = 5e-5
 lg_lambda = 0.0
-n_epochs = 20
+n_epochs = 0
 ########hyper
 pre_name = "bert-base-multilingual-cased"
 # transformers中bert-base-multilingual-cased
 
 
-@cache_results(
-    "caches/{}_{}_{}.pkl".format(pair, pre_name.split("/")[-1], max_word_len),
-    _refresh=False,
-)
+# @cache_results(
+#     "caches/{}_{}_{}.pkl".format(pair, pre_name.split("/")[-1], max_word_len),
+#     _refresh=False,
+# )
 def get_data():
     data_bundle = BiUnAlignLoader(pair, lower=True).load(paths)
     data_bundle = MixUnalignBertPipe(pre_name, max_word_len).process(data_bundle)
@@ -110,11 +111,14 @@ for name, ds in data_bundle.iter_datasets():
             _metric,
             batch_size=120,
             num_workers=1,
-            device="cuda:0",
+            # device="cuda:0",
             verbose=1,
             use_tqdm=True,
         )
         data[name] = tester
+        # if name == "en_it_test":
+        #     ipdb.set_trace()
+        #     res = tester.test()
 
     elif "dev" in name:
         _metric = JointMetric(
@@ -126,7 +130,7 @@ for name, ds in data_bundle.iter_datasets():
             _metric,
             batch_size=120,
             num_workers=1,
-            device="cuda:0",
+            # device="cuda:0",
             verbose=1,
             use_tqdm=True,
         )
@@ -168,4 +172,5 @@ trainer = Trainer(
     check_code_level=-1,
 )
 trainer.train(load_best_model=False)
-fitlog.add_other(trainer.start_time, name="start_time")
+# fitlog.add_other(trainer.start_time, name="start_time")
+# fitlog.add_other(trainer.start_time, name="start_time")
