@@ -17,10 +17,16 @@ def read_dataset(path, lower, word_idx=1, def_idx=-1):
 
             if line:
                 parts = line.split("\t")
+                if len(parts) < 2:
+                    continue
                 if lower:
-                    ins = Instance(
-                        word=parts[word_idx].lower(), definition=parts[def_idx].lower()
-                    )
+                    try:
+                        ins = Instance(
+                            word=parts[word_idx].lower(),
+                            definition=parts[def_idx].lower(),
+                        )
+                    except:
+                        ipdb.set_trace()
                 else:
                     ins = Instance(word=parts[word_idx], definition=parts[def_idx])
                 ds.append(ins)
@@ -77,6 +83,8 @@ class BiUnAlignLoader(Loader):
                     line = line.strip()
                     if line:
                         parts = line.split("\t")
+                        if len(parts) < 2:
+                            continue
                         w1 = parts[0].lower().strip()
                         words[l2].append(w1)
                         w2 = parts[1].lower().strip()
