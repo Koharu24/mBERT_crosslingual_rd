@@ -30,7 +30,15 @@ if len(sys.argv) > 1:
 else:
     batch_size = 80
 
-print(f"batch_size: {batch_size}")
+if len(sys.argv) > 2:
+    pair = sys.argv[2]
+else:
+    pair = "en_it"
+
+print(f"""
+batch_size: {batch_size}
+pair: {pair}
+""")
 
 
 # fitlog.debug()
@@ -41,7 +49,6 @@ fitlog.add_hyper_in_file(__file__)
 paths = "./new_data_like_paper/mix"
 
 #######hyper
-pair = "en_it"
 model_name = "bert"
 max_word_len = 6
 lr = 5e-5
