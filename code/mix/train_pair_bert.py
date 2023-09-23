@@ -35,10 +35,12 @@ if len(sys.argv) > 2:
 else:
     pair = "en_it"
 
-print(f"""
+print(
+    f"""
 batch_size: {batch_size}
 pair: {pair}
-""")
+"""
+)
 
 
 # fitlog.debug()
@@ -50,7 +52,7 @@ paths = "./new_data_like_paper/mix"
 
 #######hyper
 model_name = "bert"
-max_word_len = 6
+max_word_len = 7
 lr = 5e-5
 lg_lambda = 0.0
 n_epochs = 20
