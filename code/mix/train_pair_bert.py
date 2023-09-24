@@ -108,16 +108,16 @@ model = JointBertReverseDict(
 )
 
 
-saved_models = os.listdir("./save_models")
-if len(saved_models) > 0:
-    saved_model = saved_models[0]
-    # model.load_state_dict(torch.load('./save_models/' + saved_model))
-    import pickle
-
-    # with open("./save_models/" + saved_model, "rb") as f:
-    #     model = pickle.load(f)
-    model = torch.load("./save_models/" + saved_model, map_location="cpu")
-    print("loaded model: ", saved_model)
+# saved_models = os.listdir("./save_models")
+# if len(saved_models) > 0:
+#     saved_model = saved_models[0]
+#     # model.load_state_dict(torch.load('./save_models/' + saved_model))
+#     import pickle
+#
+#     # with open("./save_models/" + saved_model, "rb") as f:
+#     #     model = pickle.load(f)
+#     model = torch.load("./save_models/" + saved_model, map_location="cpu")
+#     print("loaded model: ", saved_model)
 
 
 if torch.cuda.is_available():
