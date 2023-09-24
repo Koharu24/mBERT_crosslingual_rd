@@ -38,7 +38,7 @@ else:
 if len(sys.argv) > 3:
     n_epochs = int(sys.argv[3])
 else:
-    n_epochs = 3
+    n_epochs = 5
 
 print(
     f"""
@@ -66,10 +66,10 @@ pre_name = "bert-base-multilingual-cased"
 # transformers中bert-base-multilingual-cased
 
 
-# @cache_results(
-#     "caches/{}_{}_{}.pkl".format(pair, pre_name.split("/")[-1], max_word_len),
-#     _refresh=False,
-# )
+@cache_results(
+    "caches/{}_{}_{}.pkl".format(pair, pre_name.split("/")[-1], max_word_len),
+    _refresh=False,
+)
 def get_data():
     data_bundle = BiUnAlignLoader(pair, lower=True).load(paths)
     data_bundle = MixUnalignBertPipe(pre_name, max_word_len).process(data_bundle)
