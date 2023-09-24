@@ -35,10 +35,16 @@ if len(sys.argv) > 2:
 else:
     pair = "en_it"
 
+if len(sys.argv) > 3:
+    n_epochs = int(sys.argv[3])
+else:
+    n_epochs = 20
+
 print(
     f"""
 batch_size: {batch_size}
 pair: {pair}
+n_epochs: {n_epochs}
 """
 )
 
@@ -55,7 +61,6 @@ model_name = "bert"
 max_word_len = 7
 lr = 5e-5
 lg_lambda = 0.0
-n_epochs = 20
 ########hyper
 pre_name = "bert-base-multilingual-cased"
 # transformers中bert-base-multilingual-cased
@@ -102,6 +107,19 @@ model = JointBertReverseDict(
     num_languages=2,
 )
 
+
+saved_models = os.listdir("./save_models")
+if len(saved_models) > 0:
+    saved_model = saved_models[0]
+    # model.load_state_dict(torch.load('./save_models/' + saved_model))
+    import pickle
+
+    # with open("./save_models/" + saved_model, "rb") as f:
+    #     model = pickle.load(f)
+    model = torch.load("./save_models/" + saved_model, map_location="cpu")
+    print("loaded model: ", saved_model)
+
+
 if torch.cuda.is_available():
     model.cuda()
 
@@ -125,9 +143,10 @@ for name, ds in data_bundle.iter_datasets():
             use_tqdm=True,
         )
         data[name] = tester
-        # if name == "en_it_test":
-        #      ipdb.set_trace()
-        #     res = tester.test()
+        print(f"{name=}")
+        res = tester.test()
+        print(res)
+        # sys.exit()
 
     elif "dev" in name:
         _metric = JointMetric(
