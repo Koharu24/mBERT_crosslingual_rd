@@ -38,7 +38,7 @@ else:
 if len(sys.argv) > 3:
     n_epochs = int(sys.argv[3])
 else:
-    n_epochs = 20
+    n_epochs = 3
 
 print(
     f"""
