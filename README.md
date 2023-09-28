@@ -1,5 +1,3 @@
-Main code to train the model.
-
 ## Reproducing the result
 
 Clone this repo and navigate into its home directory. Also make sure
