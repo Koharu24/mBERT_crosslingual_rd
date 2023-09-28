@@ -1,4 +1,5 @@
 import sys
+import pickle
 import ipdb
 
 sys.path.append("../")
@@ -54,7 +55,7 @@ fitlog.set_log_dir("logs")
 fitlog.add_other("no lg embed and no lg loss", name="note")
 fitlog.add_hyper_in_file(__file__)
 
-paths = "./new_data_like_paper/mix"
+paths = "./training_data/mix"
 
 #######hyper
 model_name = "bert"
@@ -109,15 +110,11 @@ model = JointBertReverseDict(
 
 
 # saved_models = os.listdir("./save_models")
-# if len(saved_models) > 0:
-#     saved_model = saved_models[0]
-#     # model.load_state_dict(torch.load('./save_models/' + saved_model))
-#     import pickle
-#
-#     # with open("./save_models/" + saved_model, "rb") as f:
-#     #     model = pickle.load(f)
-#     model = torch.load("./save_models/" + saved_model, map_location="cpu")
-#     print("loaded model: ", saved_model)
+fn = f"./save_models/{pair}.pt"
+if len(fn) > 0:
+    saved_model = fn  # saved_models[0]
+    model = torch.load(saved_model, map_location="cpu")
+    print("loaded model: ", saved_model)
 
 
 if torch.cuda.is_available():

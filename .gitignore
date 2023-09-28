@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+./download_data_wikidict/*
+caches/
+save_models/
 *.py[cod]
 *$py.class
 
