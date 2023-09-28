@@ -27,10 +27,11 @@ python convert_data_to_paper_data.py
 
 ### Train the model
 
-Set the hyperparameters in the file `./code/mix/train_pair_bert.py`. Then run:
+Set the hyperparameters in the file `./train_model/mix/train_pair_bert.py`. Then run:
 
 ```bash
-python -m code.mix.train_pair_bert
+python -m train_model.mix.train_pair_bert
 ```
 
-Adapted from [BertForRD](https://github.com/yhcc/BertForRD)
+## Notes
+Code found in `./train_model` is an adaptation of [BertForRD](https://github.com/yhcc/BertForRD).
