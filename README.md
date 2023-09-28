@@ -2,7 +2,7 @@ Main code to train the model.
 
 ## Reproducing the result
 
-Clone this repo and navigate into its home directory. Alao make sure
+Clone this repo and navigate into its home directory. Also make sure
 [Bun](https://bun.sh/) is installed.
 
 ### Run the scraper
