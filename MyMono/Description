@@ -1,0 +1,11 @@
+This folder contains monolingual dictionary datasets for English, Italian, Japanese and German.
+
+For the first three, definitions were retrieved from their corresponding Wiktionary pages. 
+
+https://it.wiktionary.org/wiki/
+https://ja.wiktionary.org/wiki/
+https://en.wiktionary.org/wiki/
+
+For the latter, on the other hand, the DWDS-Worterbuch was preferred as being far richer and lemma-agnostic than the German Wiktionary.
+https://www.dwds.de/d/wb-dwdswb
+
