@@ -1,5 +1,7 @@
+# Content
 This folder contains monolingual dictionary datasets for English, Italian, Japanese and German.
 
+# Sources
 For the first three, definitions were retrieved from their corresponding Wiktionary pages. 
 
 https://it.wiktionary.org/wiki/
@@ -8,4 +10,26 @@ https://en.wiktionary.org/wiki/
 
 For the latter, on the other hand, the DWDS-Worterbuch was preferred as being far richer and lemma-agnostic than the German Wiktionary.
 https://www.dwds.de/d/wb-dwdswb
+
+# Structure
+The main function of those monolingual dictionary datasets was to first get the model familiar with a dictionary dataset structure as well as introducing it to the definition-word mapping logics of the RD task presented. 
+On this account, the four monolingual datasets simply followed the baseline structure of tab-separated word-definition pairs: each target term is matched with one and only one definition, the latter separated by a space from the headword.  
+
+# Compilation procedure
+This was performed in two steps.
+Firstly, a wordlist was obtained for each of the four languages. To do so, the following translation-based strategy was adopted. 
+Starting from a large pre-compiled list of English words from the Gutenberg Project (https://github.com/dwyl/english-words), a final cleaned wordlist of about 116k English terms was created by filtering out all those words considered unnecessary due to the features below: 
+-Words starting with the same characters, whether vowel or consonant, in sequence (ex. “AAA”, “TT”, “EE”, etc..)
+-Words being strings or one-char-long. (ex. “1”, “a”, “t”,…).
+-Words including punctuation and special characters (i.e.,  £,$,%,&,#, etc…).
+-Two-word-long compounds (because when translated in the other Lg1s in the next step, those are usually rendered as entire expressions and/or longer word clusters, rather than single words)
+
+In addition, Python’s spaCy library was used to extract only nouns, verbs, adjectives, adverbs, pronouns and interjections and convert them into lemmas. Such a POS-based selection was driven by the linguistic observation that open lexical word classes are semantically richer hence more informative than the functional ones. 
+
+Once obtained the clean English list, headwords for the German, Italian and Japanese wordlists were derived by translating its terms through MarianNMT as this is one of the few MT models freely available as a Python library which supports all the three languages of interest. 
+
+The reason behind the choice of a translation-driven method was primarily for convenience: this time- and energy-saving strategy actually prevented looking for pre-compiled noisy wordlists on the net to be filtered-out and lemmatised every time for each language. 
+It may be worth pointing out that a translation-based method should not be a problem as the main goal at this stage was just to get a list of random words, even if the several senses of these words were not parallel. In other words, polysemous entries in English may either have had multiple different translations in the other languages or rather no equivalents at all. Still, this did not matter since any word was well accepted as long as it satisfied the filtering-out criteria for the wordlist creation mentioned above. 
+The second part of the compilation pipeline focused on retrieving the definitions (or better “senses”) for each headword in the four wordlists. Accordingly, a web scraping technique using Javascript’s Puppeteer library was employed to extract all the definitions from the Wiktionary pages and the DWDS. Since no additional clues besides the word’s meaning had to be included in the description, all extra information (e.g., parenthesised semantic fields at the beginning of the definition, quotations and/or sentence examples at the end) was removed. As for the number of senses, a limit of max. 10 definitions for each lexical entry was needed above all when dealing with English and German. In fact, those Germanic languages are highly lexical recycling languages insofar they heavily rely on the POS-driven conversion as a productive strategy for vocabulary expansion. To spell this out, the English term “fast” can work as a noun (“period without food”), a verb (“not eating for a period”), an adjective (“quick, rapid”) or an adverb (“quickly” or also “firmly”) according to the context of usage. Consequently, the senses for such term would be countless and lead to unmanageable numbers. To avoid that, a random sampling within all the web-derived definitions of the word was performed to select a restricted yet still representative number of definitions. 
+
 
